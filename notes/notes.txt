@@ -1,0 +1,2 @@
+- PR data collection says it collects the author, PR title, PR state, and closedBy (user) but these are not shown in the provided dataset. Also, a few other fields like `creation date` and `close date` are not directly shown, but might have been converted to values like `merge_time`.
+- ^ Need to rewrite PR collection script to get 'raw' data and then produce the dataset after both collection steps.
