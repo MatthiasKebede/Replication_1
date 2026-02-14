@@ -60,7 +60,7 @@ notes/                    # Optional if you have any notes you took during repro
   - Any environment variables needed -->
 
   - Clone the repository (e.g. `git clone https://github.com/MatthiasKebede/Replication_1`) and navigate to the directory
-  - Create a virtual environment (e.g. `python -m venv .venv`) and activate it (`.venv/scripts/activate` on Windows, `.venv/bin/activate` on MacOS/Linux)
+  - Create a virtual environment (e.g. `python -m venv .venv`) and activate it (`.venv/scripts/activate` on Windows, `source .venv/bin/activate` or `.venv/bin/activate` on MacOS/Linux)
   - Install libraries (e.g. `pip install -r requirements.txt`)
   - Create a `.env` file and insert your GitHub Personal Access Token (e.g. `GITHUB_TOKEN=sample_token_value`)
 

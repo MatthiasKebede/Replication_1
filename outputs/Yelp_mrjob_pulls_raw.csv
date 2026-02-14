@@ -1,2 +1,12 @@
 author,pull_number,title,description,churn,changed_files,activities,comments,comment_dates,state,creation_date,close_date,closed_by
 dsevilla,2226,Replace pipes with shlex for command quoting,0,8,1,0,0,,open,2025-10-30T20:02:04+00:00,,
+dsevilla,2225,"util.py (and hence mrjob) not to depend on pipes, removed in python 3.13",96,12,3,0,3,2025-10-27T03:11:39+00:00;2025-11-26T08:20:32+00:00;2025-11-26T08:25:24+00:00,open,2025-03-15T11:07:10+00:00,,
+TrellixVulnTeam,2220,CVE-2007-4559 Patch,1075,21,1,0,0,,open,2022-09-30T23:49:54+00:00,,
+timgates42,2218,docs: Fix a few typos,366,6,3,0,0,,open,2022-07-14T07:58:49+00:00,,
+anjackson,2215,Make unpacking archives optional,827,51,4,0,0,,open,2022-03-23T19:55:25+00:00,,
+ndamulelonemakh,2214,Update quickstart.rst,96,4,1,0,0,,open,2021-11-08T11:23:31+00:00,,
+mgmarino,2209,Pin google-cloud-logging <= 1.15.1,154,3,1,0,0,,open,2021-03-31T18:37:57+00:00,,
+mgmarino,2208,Set Tags on EMR cluster creation,450,28,1,0,3,2021-03-31T18:45:29+00:00;2021-05-14T06:17:12+00:00;2021-09-24T12:28:39+00:00,open,2021-03-31T18:05:53+00:00,,
+coyotemarin,2203,v0.7.4 release,195,490,16,4,2,2020-09-17T05:10:34+00:00;2020-09-17T22:07:55+00:00,merged,2020-09-16T22:55:11+00:00,2020-09-17 22:08:17+00:00,coyotemarin
+coyotemarin,2202,"max_clusters_in_pool, pool_timeout_minutes, and bypassing of pool_wait_minutes",1548,948,6,4,0,,merged,2020-09-13T05:20:06+00:00,2020-09-15 00:47:59+00:00,coyotemarin
+coyotemarin,2197,pooling: query YARN resource manager for available memory and CPU,198,450,6,4,1,2020-08-28T18:35:38+00:00,merged,2020-08-26T23:31:56+00:00,2020-08-29 19:31:23+00:00,coyotemarin

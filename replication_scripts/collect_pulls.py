@@ -22,7 +22,7 @@ from github import Auth
 load_dotenv()
 
 
-def mine_repository(owner: str, repo: str) -> None:
+def collect_pull_requests(owner: str, repo_name: str) -> None:
     """
     Mine repository data from GitHub.
 
@@ -41,21 +41,21 @@ def mine_repository(owner: str, repo: str) -> None:
     # Initialize GitHub API client here
     auth = Auth.Token(token)
     git = Github(auth=auth)
-    git_repo = git.get_repo(f"{owner}/{repo}")
+    repo = git.get_repo(f"{owner}/{repo_name}")
 
     print(f"\n{'=' * 60}")
-    print(f"REPOSITORY MINING RESULTS: {owner}/{repo}")
+    print(f"REPOSITORY MINING RESULTS: {owner}/{repo_name}")
     print(f"{'=' * 60}\n")
 
     # File handling for CSV output
     script_dir = os.path.dirname(os.path.abspath(__file__))
     output_dir = os.path.join(script_dir, '..', 'outputs')
     os.makedirs(output_dir, exist_ok=True)
-    output_file = os.path.join(output_dir, f'{owner}_{repo}_pulls_raw.csv') # currently makes a CSV per repo, could combine into one
+    output_file = os.path.join(output_dir, f'{owner}_{repo_name}_pulls_raw.csv') # currently makes a CSV per repo, could combine into one
     
     # Collect PR information & metadata
-    pull_requests = git_repo.get_pulls(state='all')
-    with open(output_file, 'w', newline='') as file:
+    pull_requests = repo.get_pulls(state='all')
+    with open(output_file, 'w', newline='', encoding='utf-8') as file:
         fields = [
             "author","pull_number","title","description","churn","changed_files","activities",
             "comments","comment_dates","state","creation_date","close_date","closed_by"
@@ -112,7 +112,7 @@ def main():
     owner = sys.argv[1]
     repo = sys.argv[2]
 
-    mine_repository(owner, repo)
+    collect_pull_requests(owner, repo)
 
 
 if __name__ == "__main__":
