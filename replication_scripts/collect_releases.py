@@ -6,7 +6,7 @@ import os
 import sys
 import re
 import csv
-from pydriller import Repository, Git
+from git import Repo
 
 
 def collect_release_info(repo_name):
@@ -23,10 +23,32 @@ def collect_release_info(repo_name):
 
 
 
-    # Collect info w/ pydriller
-    repo = Repository(local_repo_path)
+    # Collect info w/ GitPython
+    repo = Repo(local_repo_path)
+    tags = repo.tags
     releases_data = []
-    
+    merge_pattern = re.compile(r"Merge pull request #(\d+)")
+
+    for i in range(len(tags) - 1):
+        start_tag = tags[i]
+        end_tag = tags[i+1]
+        release_info = {
+            "publish_date": end_tag.commit.committed_datetime.isoformat(),
+            "start_date": start_tag.commit.committed_datetime.isoformat(),
+            "number_of_commits": 0, "number_of_prs": 0
+        }
+
+        # Get commits from between the tags
+        commit_range = f'{start_tag.name}..{end_tag.name}'
+        pr_numbers = set() # only count PRs once
+        for commit in repo.iter_commits(commit_range):
+            release_info["number_of_commits"] += 1
+            match = merge_pattern.search(commit.message) # check if commit message has merge format
+            if match:
+                pr_numbers.add(int(match.group(1))) # add PR number to the set
+        
+        release_info["number_of_prs"] = len(pr_numbers)
+        releases_data.append(release_info)
 
     if not releases_data:
         print("No release data, double-check repo and code")

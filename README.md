@@ -70,7 +70,7 @@ notes/                    # Optional if you have any notes you took during repro
   - How they were used (e.g., understanding scripts, exploring datasets, understanding data fields, debugging)
   - Brief description of the assistance provided -->
 
-  - Used GitHub Copilot to improve the file handling for CSVs and to help identify which `PyGithub` PR attributes correspond to the fields needed in the initial PR collection script.
+  - Used GitHub Copilot to improve the file handling for CSVs and to help identify which `PyGithub` PR attributes correspond to the fields needed in the initial PR collection script. Also to help switch usage from `pydriller` to `GitPython` and use regex while working on the releases script.
 
 
 ## Grading Criteria for README
