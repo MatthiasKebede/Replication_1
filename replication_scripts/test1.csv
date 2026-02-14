@@ -1,0 +1,3 @@
+#,project,Cliff delta (magnitude): delivery delay,Cliff delta (estimate): delivery delay,MWW test (p-value): delivery delay,Cliff delta (magnitude): merge time,Cliff delta (estimate): merge time,MWW test (p-value): merge time,Cliff delta (magnitude): PR lifetime,Cliff delta (estimate): PR lifetime,MWW test (p-value): PR lifetime
+1,serverspec,small,"0,25058548","0,016443343",medium,"-0,336172025","0,001288248",negligible,"0,047051309","0,652796461"
+17,mizzy/serverspec,negligible,"0,039","0,5623210455",medium,"0,356","0,000000174",medium,"0,385","1,67E-008"

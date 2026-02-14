@@ -1,0 +1,7 @@
+added merged at in th pulls script, creatting a new column in output_pulls_raw.csv
+I found that tags in github are not neccasirly choronological ordered so I cjanged tags = repo.tags
+to this tags = sorted(repo.tags, key=lambda t: t.commit.committed_datetime)
+Moreover I needed more field to calculate the lifetime, so added some code in collect_realase.py but Iam saveing it in a different file for now, later we can merged
+The authors checked the repo only with travis CI using it, I did the save and found that 23 of them don't have a record of CI builds on travis. 40 of them are not present on travis. 1-3 end in connection time out, while only 22 give the record of travis builds. I don't know why these number seem to fluctuate by a margin of 3. I will choose the 5 for the replication which can be done replicated rest we can just report as dispercaies
+{'no travis CI builds': 23, 'repo nofound': 40, 'SUCCES': 22}
+['yiisoft/yii', 'vanilla/vanilla', 'scikit-image/scikit-image', 'dropwizard/dropwizard', 'androidannotations/androidannotations', 'jashkenas/backbone', 'bcit-ci/CodeIgniter', 'mizzy/serverspec', 'ReactiveX/RxJava', 'Netflix/Hystrix', 'refinery/refinerycms', 'Pylons/pyramid', 'ether/etherpad-lite', 'jashkenas/underscore', 'BabylonJS/Babylon.js', 'loomio/loomio', 'scikit-learn/scikit-learn', 'puppetlabs/puppet', 'woocommerce/woocommerce', 'scipy/scipy', 'matplotlib/matplotlib', 'ipython/ipython']
