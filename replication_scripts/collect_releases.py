@@ -40,6 +40,23 @@ def collect_release_info(repo_name):
     releases_data = []
     releases_map = {}
 
+    if real_tags: # copy of below loop, handles missing `v1.0.0` in output
+        first_tag = real_tags[0]
+        first_info = {'title': first_tag.name,"publish_date": first_tag.commit.committed_datetime.isoformat(),
+            "start_date": None,"number_of_commits": 0, "number_of_prs": 0}
+        pr_numbers = set()
+        for commit in repo.iter_commits(first_tag.name):
+            first_info["number_of_commits"] += 1
+            match = merge_pattern.search(commit.message)
+            if match:
+                pr_number = int(match.group(1))
+                pr_numbers.add(pr_number)
+                releases_map[pr_number] = first_tag.name
+        first_info["number_of_prs"] = len(pr_numbers)
+        initial_commit = next(repo.iter_commits(reverse=True))
+        first_info["start_date"] = initial_commit.committed_datetime.isoformat()
+        releases_data.append(first_info)
+
     for i in range(len(real_tags) - 1):
         start_tag = real_tags[i]
         end_tag = real_tags[i+1]
@@ -50,7 +67,7 @@ def collect_release_info(repo_name):
         }
 
         # Get commits from between the tags
-        commit_range = f'{start_tag.name}..{end_tag.name}' # commits reachable from end_tag but not from start_tag
+        commit_range = f'{start_tag.name}..{end_tag.name}' # "receive only commits between two named revisions"
         pr_numbers = set() # only count PRs once
         for commit in repo.iter_commits(commit_range):
             release_info["number_of_commits"] += 1
