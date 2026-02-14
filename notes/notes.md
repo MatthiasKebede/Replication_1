@@ -3,7 +3,7 @@
 - PR data collection says it collects the author, PR title, PR state, and closedBy (user) but these are not shown in the provided dataset. Also, a few other fields like `creation date` and `close date` are not directly shown, but might have been converted to values like `merge_time`.
 - ^ Need to rewrite PR collection script to get 'raw' data and then produce the dataset after both collection steps.
 - The raw PR collection does not include information like `pull_id` or `stacktrace_attached` that are referenced later on in the final dataset.
-- Very little explanation of how things like `date_of_comments` should be handled before the explanatory model section.
+- Very little explanation of how things like `date_of_comments` should be handled before the explanatory model section (e.g. store as raw dates, or immediately convert into a duration or date range?).
 - The presence/absence of CI is mentioned in the project selection part, but it is not mentioned in the data collection itself. Some options to deal with this would be to manually check first Travis-CI build, find some heuristic, or take their metrics for number of PRs before starting to use CI and assume that only the post-CI count will have increased.
 
 
