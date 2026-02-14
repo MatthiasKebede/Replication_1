@@ -18,9 +18,9 @@ Your repository README should include the following sections:
 
 ### 1. Project Title and Overview
 
-- **Paper Title**: [Full title of the replicated paper]
-- **Authors**: [Original paper authors]
-- **Replication Team**: [Your team members' names]
+- **Paper Title**: Studying the impact of adopting continuous integration on the delivery time of pull requests
+- **Authors**: João Helis Bernardo, Daniel Alencar da Costa, and Uirá Kulesza
+- **Replication Team**: Matthias Kebede and Muhammad Arhum
 - **Course**: CS-UH 3260 Software Analytics, NYUAD
 - **Brief Description**: 
   - 2-3 sentences summarizing what the original paper is about
@@ -46,23 +46,31 @@ notes/                    # Optional if you have any notes you took during repro
 
 ### 3. Setup Instructions
 
-- **Prerequisites**: Required software, tools, and versions
-  - OS requirements
+- **Prerequisites**:
+  <!-- - OS requirements
   - Programming language versions (Python, R, etc.)
   - Required packages/libraries and versions
-  - Any other dependencies
+  - Any other dependencies -->
+
+  - Python 3.11 or higher
+  - Git and Pip are installed (tested with `git version 2.41.0.windows.1` and `pip 23.1.2`)
 - **Installation Steps**: Step-by-step instructions to set up the environment
-  - How to install dependencies
+  <!-- - How to install dependencies
   - How to configure paths or settings
-  - Any environment variables needed
+  - Any environment variables needed -->
+
+  - Clone the repository (e.g. `git clone https://github.com/MatthiasKebede/Replication_1`) and navigate to the directory
+  - Create a virtual environment (e.g. `python -m venv .venv`) and activate it (`.venv/scripts/activate` on Windows, `.venv/bin/activate` on MacOS/Linux)
+  - Install libraries (e.g. `pip install -r requirements.txt`)
+  - Create a `.env` file and insert your GitHub Personal Access Token (e.g. `GITHUB_TOKEN=sample_token_value`)
 
 ### 4. GenAI Usage
-
-**GenAI Usage**: Briefly document any use of generative AI tools (e.g., ChatGPT, GitHub Copilot, Cursor) during the replication process. Include:
-
+<!-- **GenAI Usage**: Briefly document any use of generative AI tools (e.g., ChatGPT, GitHub Copilot, Cursor) during the replication process. Include:
   - Which tools were used
   - How they were used (e.g., understanding scripts, exploring datasets, understanding data fields, debugging)
-  - Brief description of the assistance provided
+  - Brief description of the assistance provided -->
+
+  - Used GitHub Copilot to improve the file handling for CSVs and to help identify which `PyGithub` PR attributes correspond to the fields needed in the initial PR collection script.
 
 
 ## Grading Criteria for README

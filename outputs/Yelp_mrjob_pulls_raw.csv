@@ -1,0 +1,2 @@
+author,pull_number,title,description,churn,changed_files,activities,comments,comment_dates,state,creation_date,close_date,closed_by
+dsevilla,2226,Replace pipes with shlex for command quoting,0,8,1,0,0,,open,2025-10-30T20:02:04+00:00,,
