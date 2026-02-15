@@ -58,7 +58,7 @@ def collect_pull_requests(owner: str, repo_name: str) -> None:
     with open(output_file, 'w', newline='', encoding='utf-8') as file:
         fields = [
             "author","pull_number","title","description","churn","changed_files","activities",
-            "comments","comment_dates","state","creation_date","close_date","closed_by"
+            "comments","comment_dates","state","creation_date","close_date","closed_by", "merged_at"
         ]
         writer = csv.DictWriter(file, fieldnames=fields)
         writer.writeheader()
@@ -93,6 +93,7 @@ def collect_pull_requests(owner: str, repo_name: str) -> None:
                 "creation_date": pr.created_at.isoformat(), # ISO for consistency w/ comment dates
                 "close_date": pr.closed_at if pr.closed_at else None,
                 "closed_by": closed_by.login if closed_by else None,
+                "merged_at": pr.merged_at if pr.merged else None
             }
             writer.writerow(row)
         
