@@ -15,6 +15,69 @@ from cliffs_delta import cliffs_delta
 
 load_dotenv()
 
+def statistics_from_original_datasets(pull_csv_path: str,
+                                      release_csv_path: str):
+    """
+    Load the original authors' datasets and return a list of:
+    
+        (repo_name, before_ci_df, after_ci_df)
+
+    Each DataFrame contains:
+        - t1 (merge_time)
+        - t2 (delivery_time)
+        - lifetime
+    Compatible with analyze_ci_data().
+    """
+
+    import pandas as pd
+
+    # --------------------------------------------------
+    # Load datasets
+    # --------------------------------------------------
+    pr_data = pd.read_csv(pull_csv_path)
+    release_data = pd.read_csv(release_csv_path)  # not required for metrics
+
+    # --------------------------------------------------
+    # Clean numeric columns
+    # --------------------------------------------------
+    pr_data["merge_time"] = pd.to_numeric(pr_data["merge_time"], errors="coerce")
+    pr_data["delivery_time"] = pd.to_numeric(pr_data["delivery_time"], errors="coerce")
+
+    # --------------------------------------------------
+    # Create expected metric columns
+    # --------------------------------------------------
+    pr_data["t1"] = pr_data["merge_time"]
+    pr_data["t2"] = pr_data["delivery_time"]
+    pr_data["lifetime"] = pr_data["t1"] + pr_data["t2"]
+
+    results = []
+
+    # --------------------------------------------------
+    # Process each repository separately
+    # --------------------------------------------------
+    for project_name, group in pr_data.groupby("project"):
+
+        before_ci = group[group["practice"] != "CI"].copy()
+        after_ci = group[group["practice"] == "CI"].copy()
+
+        # Remove missing values
+        before_ci = before_ci.dropna(subset=["t1", "t2", "lifetime"])
+        after_ci = after_ci.dropna(subset=["t1", "t2", "lifetime"])
+
+        # Only include repos with both groups
+        if len(before_ci) == 0 or len(after_ci) == 0:
+            print(f"Skipping {project_name}: insufficient before/after data.")
+            continue
+
+        results.append((project_name, before_ci, after_ci))
+
+    return results
+
+
+import os
+import pandas as pd
+from scipy.stats import mannwhitneyu
+from cliffs_delta import cliffs_delta  # Ensure this import works correctly
 def analyze_ci_data(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_file: str):
     """
     Compute MWW and Cliff's delta for delivery delay (t2), merge time (t1), and PR lifetime.
@@ -23,6 +86,7 @@ def analyze_ci_data(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_f
         - Otherwise append new row
     """
 
+    # Ensure necessary columns exist (e.g., t1, t2, lifetime)
     for df in [before_ci, after_ci]:
         if "t1" not in df.columns:
             df["t1"] = (df['merged_at'] - df['creation_date']).dt.total_seconds()
@@ -50,14 +114,22 @@ def analyze_ci_data(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_f
         else:
             return "large"
 
-    #decimal formatting
+    # Decimal formatting function for output
     def fmt(x):
         if x is None:
             return ""
-        return format(float(x), ".10f")  
+        return format(float(x), ".10f")
 
+    # Row for the current repo
     row = {
         "project": repo
+    }
+
+    # Track number of significant results for summary
+    significant_results = {
+        "delivery delay": 0,
+        "merge time": 0,
+        "PR lifetime": 0
     }
 
     for metric_name, col in metrics.items():
@@ -66,8 +138,12 @@ def analyze_ci_data(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_f
 
         if len(before_values) > 0 and len(after_values) > 0:
             stat, p_value = mannwhitneyu(before_values, after_values, alternative='two-sided')
-            delta, _ = cliffs_delta(before_values, after_values)
+            delta, _ = cliffs_delta(after_values, before_values)
             magnitude = cliff_magnitude(delta)
+            
+            # Track significant p-values
+            if p_value < 0.05:
+                significant_results[metric_name] += 1
         else:
             p_value, delta, magnitude = None, None, None
 
@@ -75,38 +151,42 @@ def analyze_ci_data(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_f
         row[f"Cliff delta (estimate): {metric_name}"] = fmt(delta)
         row[f"MWW test (p-value): {metric_name}"] = fmt(p_value)
 
+    # Create DataFrame with the results
     new_row_df = pd.DataFrame([row])
 
+    # Update or append to the output CSV file
     if os.path.exists(out_file):
         existing_df = pd.read_csv(out_file)
 
         if repo in existing_df["project"].values:
-            # Update the existing row safely
+            # Update the existing row
             existing_row_idx = existing_df[existing_df["project"] == repo].index[0]
             for column in new_row_df.columns:
-                # Convert any string (even scientific notation) to float before assignment
                 value = new_row_df[column].iloc[0]
                 if isinstance(value, str):  # Check if it's a string
                     try:
-                        # Convert the string to a float if possible
                         value = float(value)
                     except ValueError:
-                        pass  # If it can't be converted, leave it as is
+                        pass  # Leave it as is if conversion fails
 
                 existing_df.at[existing_row_idx, column] = value
         else:
             # Append new row if repo not in the file
             existing_df = pd.concat([existing_df, new_row_df], ignore_index=True)
 
-        # Save back to CSV
+        # Save the updated DataFrame back to CSV
         existing_df.to_csv(out_file, index=False)
     else:
-        # File doesn't exist → create new
+        # File doesn't exist → create new one
         new_row_df.to_csv(out_file, index=False)
 
+    # Print significant result summary
+    print("\n===== SIGNIFICANT RESULTS SUMMARY =====")
+    for metric_name, count in significant_results.items():
+        print(f"{metric_name} significant results: {count}")
+    print("========================================")
+
     print(f"Results saved/updated in {out_file}")
-
-
 
 def first_CI(owner,repo_name):
 
@@ -207,8 +287,7 @@ def statistics(repo_name, owner):
     #print("After CI")
     #print(after_ci[['pull_number', 't1', 't2', 'lifetime']])
     delivery_time = "t2"
-    stat, p_value = mannwhitneyu(before_ci[delivery_time], after_ci[delivery_time], alternative='two-sided')
-    #print("MWW p-value:", p_value)
+    stat, p_value = mannwhitneyu(after_values, before_values, alternative='two-sided')    #print("MWW p-value:", p_value)
     delta, res = cliffs_delta(before_ci[delivery_time], after_ci[delivery_time])
     #print("Cliff's delta:", delta, res)
     return before_ci, after_ci
@@ -254,6 +333,7 @@ def main():
         ('spark', 'notebook'),
         ('yelp', 'mrjob'),
     ]
+    """
     for owner, repo in test_suite2:
         try:
             before_ci, after_ci =  statistics(repo, owner)
@@ -261,5 +341,9 @@ def main():
             #first_CI(owner, repo)
         except:
             continue
+    """
+    x = statistics_from_original_datasets('../datasets/pull_requests_meta_data.csv','../datasets/releases_meta_data.csv')
+    for r, b ,c in x:
+        analyze_ci_data(b,c,r,"../outputs/results.csv" )
 if __name__ == "__main__":
     main()
