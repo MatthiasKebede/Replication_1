@@ -1,3 +1,11 @@
+
+"""
+This file is created to match verify the analysis of our code with the analysis of the authors. It will create a 
+csv file in current dir, containing outputs for manual analysis
+"""
+
+
+
 import pandas as pd
 import re
 
@@ -81,4 +89,4 @@ def merge_projects_both_files(your_file, authors_file, output_combined_file):
     print(f"Comparison results saved in {output_combined_file}")
 
 # Example usage
-merge_projects_both_files('../outputs/results.csv', '../datasets/wilcoxon_test_and_cliffs_delta_result_for_rq1.csv', 'comparison_combined_results.csv')
+merge_projects_both_files('../outputs/results_from_orignal_data.csv', '../datasets/wilcoxon_test_and_cliffs_delta_result_for_rq1.csv', 'comparison_combined_results.csv')
