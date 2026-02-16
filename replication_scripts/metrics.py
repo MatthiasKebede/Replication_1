@@ -202,12 +202,6 @@ def analysis(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_file: st
         # File doesn't exist → create new one
         new_row_df.to_csv(out_file, index=False)
 
-    # Print significant result summary
-    print("\n===== SIGNIFICANT RESULTS SUMMARY =====")
-    for metric_name, count in significant_results.items():
-        print(f"{metric_name} significant results: {count}")
-    print("========================================")
-
     print(f"Results saved/updated in {out_file}")
 
 def first_CI_by_TRAVIS_API(owner,repo_name):
@@ -318,7 +312,7 @@ def main():
     #Main entry point for the script
     #1
     #if you want results for all the repos we minned, or form the data provided by Authors comment this and scroll down to #2 or #3
-    if len(sys.argv) != 3:
+    """ if len(sys.argv) != 3:
         print("Usage: python mine_repo.py <repo> <owner>")
         print("Example: python mine_repo.py mrjob Yelp")
         sys.exit(1)
@@ -326,7 +320,7 @@ def main():
     repo = sys.argv[1]
     owner = sys.argv[2]
     before_ci, after_ci =  dataSetup(repo, owner)
-    analysis(before_ci, after_ci, repo,"")
+    analysis(before_ci, after_ci, repo,"")"""
     #Travis CI API Authentication was availble for following repos in mine_suite1
     mine_suite1 = [
                 ('yiisoft' ,'yii'),
@@ -362,7 +356,7 @@ def main():
     ]
     #2
     # Uncomment the below code to run analysis on the the data we minned form repos listed in mine_suite2, it will be save in a file called ../outputs/results_from_minned_data.csv
-    """
+   
     for owner, repo in mine_suite2:
         try:
             before_ci, after_ci =  dataSetup(repo, owner)
@@ -370,7 +364,7 @@ def main():
             #first_CI_by_TRAVIS_API(owner, repo)
         except:
             continue
-    """
+   
     #3
     # Uncoment the below code to run the analysis on the Author's dataset, the output will be in a called ../outputs/results_from_orignal_data.csv
     """
