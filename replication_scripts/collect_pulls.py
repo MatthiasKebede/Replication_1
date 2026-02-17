@@ -16,6 +16,8 @@ import csv
 from dotenv import load_dotenv
 from github import Github
 from github import Auth
+import time
+import random  # Added for randomized sleep
 
 
 # Load environment variables from .env file
@@ -97,6 +99,9 @@ def collect_pull_requests(owner: str, repo_name: str) -> None:
                 "merged_at": pr.merged_at if pr.merged else None
             }
             writer.writerow(row)
+
+            # Minimal delay to avoid GitHub abuse detection
+            time.sleep(0.15 + random.random() * 0.15)  # Randomized 0.15–0.3s delay
         
     git.close()
 
