@@ -351,11 +351,11 @@ def main():
         ]
     #repos we minned
     mine_suite2 = [
-        ('Netflix', 'Hystrix'),
-        ('mizzy', 'serverspec'),
-        ('roots', 'sage'),
-        ('spark', 'notebook'),
-        ('yelp', 'mrjob'),
+        ('Netflix', 'Hystrix'),        # Java
+        ('mizzy', 'serverspec'),       # Ruby
+        ('yiisoft' ,'yii'),            # PHP
+        ('jashkenas' ,'backbone'),     # JavaScript
+        ('Pylons' ,'pyramid'),         # Python
     ]
     #2
     # Uncomment the below code to run analysis on the the data we minned form repos listed in mine_suite2, it will be save in a file called /outputs/results_from_minned_data.csv

@@ -51,10 +51,11 @@ def main():
     # Case 2: Batch mode
     else:
         repos = [
-            ("Netflix", "Hystrix"),
-            ("elastic", "kibana"),
-            ("scikit-learn", "scikit-learn"),
-            # Add more here
+            ('Netflix', 'Hystrix'),        # Java
+            ('mizzy', 'serverspec'),       # Ruby
+            ('yiisoft' ,'yii'),            # PHP
+            ('jashkenas' ,'backbone'),     # JavaScript
+            ('Pylons' ,'pyramid'),         # Python
         ]
 
         for owner, repo in repos:
