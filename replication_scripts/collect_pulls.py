@@ -100,7 +100,6 @@ def collect_pull_requests(owner: str, repo_name: str) -> None:
         
     git.close()
 
-    print(f"Total Pull Requests: {pull_requests.totalCount}")
     print(f"\n{'=' * 60}\n")
 
 

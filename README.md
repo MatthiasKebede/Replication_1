@@ -85,6 +85,8 @@ notes/                                     # Optional if you have any notes you 
   - **GitHub Copilot**
     - Used to improve file handling for CSVs and to help identify which `PyGithub` PR attributes correspond to the fields needed in the initial `collect_pulls.py` script.
     - Also to help switch usage from `pydriller` to `GitPython` and use regex while working on the `collect_releases.py` script.
+  - **ChatGPT**
+    - Helped with figuring out how to format the LaTeX tables in the report.
 
 
 ## Grading Criteria for README
