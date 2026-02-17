@@ -20,10 +20,10 @@ def check_user_intended(tag_name):
 def collect_release_info(repo_name):
     # File handling
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = os.path.join(script_dir, '..', 'outputs')
-    os.makedirs(output_dir, exist_ok=True)
-    output_file = os.path.join(output_dir, f'{repo_name}_releases_raw.csv')
-    linked_file = os.path.join(output_dir, f'{repo_name}_releases_linked.csv')
+    mined_output_dir = os.path.join(script_dir, '..', 'outputs', 'mined')
+    os.makedirs(mined_output_dir, exist_ok=True)
+    output_file = os.path.join(mined_output_dir, f'{repo_name}_releases_raw.csv')
+    linked_file = os.path.join(mined_output_dir, f'{repo_name}_releases_linked.csv')
     
     local_repo_path = os.path.join(script_dir, '..', '..', 'temp_repos', repo_name)
     if not os.path.isdir(local_repo_path):

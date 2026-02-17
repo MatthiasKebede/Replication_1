@@ -14,7 +14,10 @@ from cliffs_delta import cliffs_delta
 
 
 load_dotenv()
-
+script_dir = os.path.dirname(os.path.abspath(__file__))
+output_dir = os.path.join(script_dir, '..', 'outputs')
+dataset_dir = os.path.join(script_dir, '..', 'datasets')
+mined_output_dir = os.path.join(script_dir, '..', 'outputs', 'mined')
 
 
 def dataSetup_from_original_datasets(pull_csv_path: str, release_csv_path: str):
@@ -202,7 +205,7 @@ def analysis(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_file: st
         # File doesn't exist → create new one
         new_row_df.to_csv(out_file, index=False)
 
-    print(f"Results saved/updated in {out_file}")
+    # print(f"Results saved/updated in {out_file}")
 
 def first_CI_by_TRAVIS_API(owner,repo_name):
 
@@ -252,8 +255,8 @@ def dataSetup(repo_name, owner):
         print("CI start date not found, Run first_CI_by_TRAVIS_API on the repo/s to check")
         return
     try:
-        release_data_raw = pd.read_csv(f"../outputs/{repo_name}_releases_raw.csv")
-        release_data_link = pd.read_csv(f"../outputs/{repo_name}_releases_linked.csv")
+        release_data_raw = pd.read_csv(os.path.join(mined_output_dir, f"{repo_name}_releases_raw.csv"))
+        release_data_link = pd.read_csv(os.path.join(mined_output_dir, f"{repo_name}_releases_linked.csv"))
     except:
         print("If file does not exit, run collect_pull.py and collect_release.py for this repo then try again")
         return
@@ -273,7 +276,7 @@ def dataSetup(repo_name, owner):
     release = release.rename(columns={'pull_number': 'pull_number'})
 
     
-    pull_data = pd.read_csv(f"../outputs/{owner}_{repo_name}_pulls_raw.csv")
+    pull_data = pd.read_csv(os.path.join(mined_output_dir, f"{repo_name}_pulls_raw.csv"))
 
     # Merging release and pull data
     data = pd.merge(release_df[['pull_number', 'release_tag', 'publish_date', 'start_date']],
@@ -355,23 +358,27 @@ def main():
         ('yelp', 'mrjob'),
     ]
     #2
-    # Uncomment the below code to run analysis on the the data we minned form repos listed in mine_suite2, it will be save in a file called ../outputs/results_from_minned_data.csv
+    # Uncomment the below code to run analysis on the the data we minned form repos listed in mine_suite2, it will be save in a file called /outputs/results_from_minned_data.csv
    
     for owner, repo in mine_suite2:
         try:
             before_ci, after_ci =  dataSetup(repo, owner)
-            analysis(before_ci, after_ci, repo,"../outputs/results_from_minned_data.csv")
+            analysis(before_ci, after_ci, repo,os.path.join(output_dir, "results_from_minned_data.csv"))
             #first_CI_by_TRAVIS_API(owner, repo)
-        except:
+        except Exception as e:
+            print(f"Error in {repo}/{owner}: {e}")
             continue
    
     #3
     # Uncoment the below code to run the analysis on the Author's dataset, the output will be in a called ../outputs/results_from_orignal_data.csv
     """
 
-    x = dataSetup_from_original_datasets('../datasets/pull_requests_meta_data.csv','../datasets/releases_meta_data.csv')
+    pr_dataset = os.path.join(dataset_dir, 'pull_requests_meta_data.csv')
+    releases_dataset = os.path.join(dataset_dir, 'releases_meta_data.csv')
+    result_output = os.path.join(output_dir, 'results_from_orignal_data.csv')
+    x = dataSetup_from_original_datasets(pr_dataset, releases_dataset)
     for r, b ,c in x:
-        analysis(b,c,r,"../outputs/results_from_orignal_data.csv" )
+        analysis(b,c,r, result_output)
     """
 if __name__ == "__main__":
     main()
