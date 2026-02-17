@@ -16,7 +16,7 @@ def run_pipeline(owner: str, repo: str):
 
     try:
         print("Step 1: Collecting pull requests...")
-        collect_pull_requests(owner, repo)
+        #collect_pull_requests(owner, repo)
 
         print("Step 2: Collecting releases...")
         collect_release_info(owner, repo)
@@ -26,7 +26,7 @@ def run_pipeline(owner: str, repo: str):
 
         print("Step 4: Computing metrics...")
         before_ci, after_ci =  dataSetup(repo, owner)
-        analysis(before_ci, after_ci, repo,"../outputs/results_from_minned_data.csv")
+        analysis(before_ci, after_ci, repo,"../outputs/results_from_minned_data.csv",owner)
 
         print(f"===== Completed {owner}/{repo} =====\n")
 
@@ -56,6 +56,13 @@ def main():
             ('yiisoft' ,'yii'),            # PHP
             ('jashkenas' ,'backbone'),     # JavaScript
             ('Pylons' ,'pyramid'),         # Python
+        ]
+        repos = [
+            ('Netflix', 'Hystrix'),        # Java
+            ('mizzy', 'serverspec'),       # Ruby
+            ('jashkenas' ,'backbone'),     # JavaScript
+            ('yiisoft' ,'yii'),            # PHP
+
         ]
 
         for owner, repo in repos:

@@ -106,7 +106,7 @@ def transform_to_metric_table(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def analysis(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_file: str):
+def analysis(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_file: str, owner):
     """
     Compute MWW and Cliff's delta for delivery delay (t2), merge time (t1), and PR lifetime.
     """
@@ -143,9 +143,15 @@ def analysis(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_file: st
         return format(float(x), ".10f")
 
     # Row for the current repo
-    row = {
-        "project": repo
-    }
+    if owner != '':
+        row = {
+            "project": owner + '/' + repo
+        }
+    else:
+        row = {
+            "project":repo
+        }
+
 
     # Track number of significant results for summary
     significant_results = {
@@ -272,7 +278,8 @@ def dataSetup(repo_name, owner):
         print("CI start date not found, Run first_CI_by_TRAVIS_API on the repo/s to check")
         sys.exit(1)
     try:
-        print(os.path.join(mined_output_dir, f"{repo_name}_releases_raw.csv"))
+        #print(os.path.join(mined_output_dir, f"{repo_name}_releases_raw.csv"))
+        print(mined_output_dir)
         release_data_raw = pd.read_csv(os.path.join(mined_output_dir, f"{repo_name}_releases_raw.csv"))
         
         release_data_link = pd.read_csv(os.path.join(mined_output_dir, f"{repo_name}_releases_linked.csv"))
@@ -342,7 +349,8 @@ def main():
     repo = sys.argv[1]
     owner = sys.argv[2]
     before_ci, after_ci =  dataSetup(repo, owner)
-    analysis(before_ci, after_ci, repo,"")
+    
+    analysis(before_ci, after_ci, repo,"",owner)
     #Travis CI API Authentication was availble for following repos in mine_suite1
     mine_suite1 = [
                 ('yiisoft' ,'yii'),
@@ -376,16 +384,18 @@ def main():
         ('jashkenas' ,'backbone'),     # JavaScript
         ('Pylons' ,'pyramid'),         # Python
     ]
-    for owner, repo in mine_suite2:
+    """for owner, repo in mine_suite2:
         before_ci, after_ci =  dataSetup(repo, owner)
         analysis(before_ci, after_ci, repo,"")
+    
+    """
     #2
     # Uncomment the below code to run analysis on the the data we minned form repos listed in mine_suite2, it will be save in a file called /outputs/results_from_minned_data.csv
     """
     for owner, repo in mine_suite2:
         try:
             before_ci, after_ci =  dataSetup(repo, owner)
-            analysis(before_ci, after_ci, repo,os.path.join(output_dir, "results_from_minned_data.csv"))
+            analysis(before_ci, after_ci, repo,os.path.join(output_dir, "results_from_minned_data.csv"), owner)
             #first_CI_by_TRAVIS_API(owner, repo)
         except Exception as e:
             print(f"Error in {repo}/{owner}: {e}")
@@ -400,7 +410,7 @@ def main():
     result_output = os.path.join(output_dir, 'results_from_orignal_data.csv')
     x = dataSetup_from_original_datasets(pr_dataset, releases_dataset)
     for r, b ,c in x:
-        analysis(b,c,r, result_output)
+        analysis(b,c,r, result_output,"")
     """
 if __name__ == "__main__":
     main()
