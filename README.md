@@ -68,7 +68,7 @@ notes/                                     # Optional if you have any notes you 
   ```
   - Create a `.env` file and paste in your GitHub Personal Access Token (e.g. `GITHUB_TOKEN=sample_token_value`) and Travis-CI API Token (e.g. `TRAVIS_TOKEN=sample_token`)
 - **Running Instructions**:
-  - (explain `run.py` here once it is finalized)
+  - You should be able to run `python run.py` to run the entire workflow across our five selected repositories (or `python run.py <owner> <repo` for a specific repository>). Alternatively, you can collect and analyze the data as seen below:
   - **Collecting New Data**:
     - Collect PR metadata for a given repository by running `python collect_pulls.py <owner> <repo>` (will take a long time for repos w/ many PRs)
     - Collect release metadata for a given repo by running `python collect_releases.py <owner> <repo>`. This works locally instead of using the GitHub API, so you can optionally clone the specified repo beforehand (looks for sibling directory `Replication_1/../temp_repos/<repo>` by default). Otherwise, it will automatically clone the repo to that location.
