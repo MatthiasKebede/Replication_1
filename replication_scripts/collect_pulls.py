@@ -49,9 +49,9 @@ def collect_pull_requests(owner: str, repo_name: str) -> None:
 
     # File handling for CSV output
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = os.path.join(script_dir, '..', 'outputs')
-    os.makedirs(output_dir, exist_ok=True)
-    output_file = os.path.join(output_dir, f'{owner}_{repo_name}_pulls_raw.csv') # currently makes a CSV per repo, could combine into one
+    mined_output_dir = os.path.join(script_dir, '..', 'outputs', 'mined') # moved this to /mined subfolder
+    os.makedirs(mined_output_dir, exist_ok=True)
+    output_file = os.path.join(mined_output_dir, f'{repo_name}_pulls_raw.csv') # currently makes a CSV per repo, could combine into one
     
     # Collect PR information & metadata
     pull_requests = repo.get_pulls(state='all')

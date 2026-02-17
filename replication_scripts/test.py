@@ -8,6 +8,13 @@ csv file in current dir, containing outputs for manual analysis
 
 import pandas as pd
 import re
+import os
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+calculated_file = os.path.join(script_dir, '..', 'outputs', 'results_from_orignal_data.csv')
+dataset_file = os.path.join(script_dir, '..', 'datasets', 'wilcoxon_test_and_cliffs_delta_result_for_rq1.csv')
+combined_file = os.path.join(script_dir, '..', 'outputs', 'comparison_combined_results.csv')
+
 
 def merge_projects_both_files(your_file, authors_file, output_combined_file):
     # --------------------------------------------------
@@ -89,4 +96,4 @@ def merge_projects_both_files(your_file, authors_file, output_combined_file):
     print(f"Comparison results saved in {output_combined_file}")
 
 # Example usage
-merge_projects_both_files('../outputs/results_from_orignal_data.csv', '../datasets/wilcoxon_test_and_cliffs_delta_result_for_rq1.csv', 'comparison_combined_results.csv')
+merge_projects_both_files(calculated_file, dataset_file, combined_file)
