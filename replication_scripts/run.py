@@ -16,7 +16,7 @@ def run_pipeline(owner: str, repo: str):
 
     try:
         print("Step 1: Collecting pull requests...")
-        #collect_pull_requests(owner, repo)
+        collect_pull_requests(owner, repo)
 
         print("Step 2: Collecting releases...")
         collect_release_info(owner, repo)
