@@ -19,7 +19,7 @@ def run_pipeline(owner: str, repo: str):
         collect_pull_requests(owner, repo)
 
         print("Step 2: Collecting releases...")
-        collect_release_info(repo)
+        collect_release_info(owner, repo)
 
         print("Step 3: Merging data...")
         consolidate_data(owner, repo)

@@ -17,7 +17,7 @@ def check_user_intended(tag_name):
     return True
 
 
-def collect_release_info(repo_name):
+def collect_release_info(owner, repo_name):
     # File handling
     script_dir = os.path.dirname(os.path.abspath(__file__))
     mined_output_dir = os.path.join(script_dir, '..', 'outputs', 'mined')
@@ -25,10 +25,21 @@ def collect_release_info(repo_name):
     output_file = os.path.join(mined_output_dir, f'{repo_name}_releases_raw.csv')
     linked_file = os.path.join(mined_output_dir, f'{repo_name}_releases_linked.csv')
     
-    local_repo_path = os.path.join(script_dir, '..', '..', 'temp_repos', repo_name)
+    temp_repo_dir = os.path.join(script_dir, '..', '..', 'temp_repos') # in case of cloning automatically
+    local_repo_path = os.path.join(temp_repo_dir, repo_name)
+    os.makedirs(temp_repo_dir, exist_ok=True)
+
+
+
+    # Clone repo if needed
     if not os.path.isdir(local_repo_path):
-        print("Repo path not found")
-        sys.exit(1)
+        repo_url = f"https://github.com/{owner}/{repo_name}.git"
+        print(f"Cloning repository from {repo_url} into {local_repo_path}...")
+        try:
+            Repo.clone_from(repo_url, local_repo_path)
+        except Exception as e:
+            print(f"Error cloning repository: {e}")
+            sys.exit(1)
 
 
 
@@ -105,12 +116,14 @@ def collect_release_info(repo_name):
 
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: python collect_releases.py <repo_name>")
+    if len(sys.argv) != 3:
+        print("Usage: python collect_releases.py <owner> <repo>")
+        print("Example: python collect_releases.py Yelp mrjob")
         sys.exit(1)
     
-    repo = sys.argv[1]
-    collect_release_info(repo)
+    owner = sys.argv[1]
+    repo = sys.argv[2]
+    collect_release_info(owner, repo)
 
 
 if __name__ == '__main__':
