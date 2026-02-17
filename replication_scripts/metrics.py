@@ -207,41 +207,58 @@ def analysis(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_file: st
 
     # print(f"Results saved/updated in {out_file}")
 
-def first_CI_by_TRAVIS_API(owner,repo_name):
 
-    # Travis API URL and setup
+# # Even though the record exits, the connection times out alot, So we added, the CI timestamps for mined repos as hardcoded
+HARDCODED_CI_DATES = {
+    "Hystrix": pd.Timestamp("2016-07-29 13:18:41+0000", tz="UTC"),
+    "serverspec": pd.Timestamp("2016-08-07 11:11:44+0000", tz="UTC"),
+    "yii": pd.Timestamp("2016-08-22 07:47:08+0000", tz="UTC"),
+    "backbone": pd.Timestamp("2016-07-19 02:05:48+0000", tz="UTC"),
+    "pyramid": pd.Timestamp("2016-07-20 20:42:18+0000", tz="UTC"),
+}
+
+
+def first_CI_by_TRAVIS_API(owner, repo_name):
     api_url = "https://api.travis-ci.com"
-    repo_slug = f"{owner}/{repo_name}"  # Ensure the correct order: owner/repo
-    repo_slug_encoded = repo_slug.replace("/", "%2F")
+    repo_slug_encoded = f"{owner}/{repo_name}".replace("/", "%2F")
     travis_token = os.getenv("TRAVIS_TOKEN")
+
+    if not travis_token:
+        print("TRAVIS_TOKEN not set.")
+        return HARDCODED_CI_DATES.get(repo_name)
+
     headers = {
         "Travis-API-Version": "3",
-        "Authorization": f"token {travis_token}"
+        "Authorization": f"token {travis_token}",
     }
 
-    # Make the API request to Travis
-    url = f"{api_url}/repo/{repo_slug_encoded}/builds?limit=1&sort_by=started_at:asc"
+    url = (
+        f"{api_url}/repo/{repo_slug_encoded}"
+        f"/builds?limit=1&sort_by=started_at:asc"
+    )
+
     try:
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            builds = response.json()["builds"]
-            if builds:
-                first_build = builds[0]
-                ci_start_date = first_build["started_at"]
-                print("CI start date detected via Travis API:", ci_start_date)
-                return pd.to_datetime(ci_start_date)  # Convert to datetime
-                
-            else:
-                print("No builds found.")
-                return
-                
-        else:
-            print("Failed to fetch data from Travis API.")
-            return
-                
-    except Exception as e:
-        print(f"Error fetching data: {e}")
-        return
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+
+        builds = response.json().get("builds", [])
+        if builds:
+            ci_start_date = builds[0].get("started_at")
+            return pd.to_datetime(ci_start_date, utc=True)
+
+    except requests.exceptions.RequestException as e:
+        print(f"Travis API request failed: {e}")
+
+    # Fallback logic 
+    fallback = HARDCODED_CI_DATES.get(repo_name)
+    if fallback:
+        print("Using hardcoded CI date.")
+        
+        return fallback
+
+    print("No CI date available.")
+    return None
+
 
 
 
@@ -253,9 +270,11 @@ def dataSetup(repo_name, owner):
     ci_start_date = first_CI_by_TRAVIS_API(owner, repo_name)
     if ci_start_date == None:
         print("CI start date not found, Run first_CI_by_TRAVIS_API on the repo/s to check")
-        return
+        sys.exit(1)
     try:
+        print(os.path.join(mined_output_dir, f"{repo_name}_releases_raw.csv"))
         release_data_raw = pd.read_csv(os.path.join(mined_output_dir, f"{repo_name}_releases_raw.csv"))
+        
         release_data_link = pd.read_csv(os.path.join(mined_output_dir, f"{repo_name}_releases_linked.csv"))
     except:
         print("If file does not exit, run collect_pull.py and collect_release.py for this repo then try again")
@@ -315,7 +334,7 @@ def main():
     #Main entry point for the script
     #1
     #if you want results for all the repos we minned, or form the data provided by Authors comment this and scroll down to #2 or #3
-    """ if len(sys.argv) != 3:
+    if len(sys.argv) != 3:
         print("Usage: python mine_repo.py <repo> <owner>")
         print("Example: python mine_repo.py mrjob Yelp")
         sys.exit(1)
@@ -323,7 +342,7 @@ def main():
     repo = sys.argv[1]
     owner = sys.argv[2]
     before_ci, after_ci =  dataSetup(repo, owner)
-    analysis(before_ci, after_ci, repo,"")"""
+    analysis(before_ci, after_ci, repo,"")
     #Travis CI API Authentication was availble for following repos in mine_suite1
     mine_suite1 = [
                 ('yiisoft' ,'yii'),
@@ -349,7 +368,7 @@ def main():
                 ('matplotlib' ,'matplotlib'),
                 ('ipython' ,'ipython')
         ]
-    #repos we minned
+    #repos we minned\
     mine_suite2 = [
         ('Netflix', 'Hystrix'),        # Java
         ('mizzy', 'serverspec'),       # Ruby
@@ -357,9 +376,12 @@ def main():
         ('jashkenas' ,'backbone'),     # JavaScript
         ('Pylons' ,'pyramid'),         # Python
     ]
+    for owner, repo in mine_suite2:
+        before_ci, after_ci =  dataSetup(repo, owner)
+        analysis(before_ci, after_ci, repo,"")
     #2
     # Uncomment the below code to run analysis on the the data we minned form repos listed in mine_suite2, it will be save in a file called /outputs/results_from_minned_data.csv
-   
+    """
     for owner, repo in mine_suite2:
         try:
             before_ci, after_ci =  dataSetup(repo, owner)
@@ -368,7 +390,7 @@ def main():
         except Exception as e:
             print(f"Error in {repo}/{owner}: {e}")
             continue
-   
+    """
     #3
     # Uncoment the below code to run the analysis on the Author's dataset, the output will be in a called ../outputs/results_from_orignal_data.csv
     """
