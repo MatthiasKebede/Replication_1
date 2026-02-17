@@ -1,11 +1,16 @@
 import argparse
 import sys
+import os
 
 # Import your modules
 from collect_pulls import collect_pull_requests
 from collect_releases import collect_release_info
 from merge import consolidate_data
 from metrics import dataSetup, analysis
+
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+output_dir = os.path.join(script_dir, '..', 'outputs')
 
 
 def run_pipeline(owner: str, repo: str):
@@ -26,7 +31,9 @@ def run_pipeline(owner: str, repo: str):
 
         print("Step 4: Computing metrics...")
         before_ci, after_ci =  dataSetup(repo, owner)
+
         analysis(before_ci, after_ci, repo,"../outputs/results_from_minned_data.csv",owner)
+
 
         print(f"===== Completed {owner}/{repo} =====\n")
 
