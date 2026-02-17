@@ -1,3 +1,3 @@
 project,Cliff delta (magnitude): delivery delay,Cliff delta (estimate): delivery delay,MWW test (p-value): delivery delay,Cliff delta (magnitude): merge time,Cliff delta (estimate): merge time,MWW test (p-value): merge time,Cliff delta (magnitude): PR lifetime,Cliff delta (estimate): PR lifetime,MWW test (p-value): PR lifetime
-Hystrix,small,0.3039042357,1.341e-06,medium,-0.3683241252,4.7e-09,small,0.2398342541,0.0001366636
-serverspec,negligible,0.1327718603,0.2065737623,small,-0.2771860292,0.0083476932,negligible,-0.1401205516,0.1825377089
+Hystrix,small,-0.3039042357,1.341e-06,medium,0.3683241252,4.7e-09,small,-0.2398342541,0.0001366636
+serverspec,negligible,-0.1327718603,0.2065737623,small,0.2771860292,0.0083476932,negligible,0.1401205516,0.1825377089
