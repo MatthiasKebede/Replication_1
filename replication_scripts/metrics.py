@@ -163,7 +163,7 @@ def analysis(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_file: st
     for metric_name, col in metrics.items():
         before_values = before_ci[col].dropna() #dropna removes missing values Removes missing values
         after_values = after_ci[col].dropna()   # stat function can't handle them
-
+        
         if len(before_values) > 0 and len(after_values) > 0:
             stat, p_value = mannwhitneyu(before_values, after_values, alternative='two-sided')
             delta, _ = cliffs_delta(after_values, before_values) # idk why but this need to be reversed to mathc signs with the orginal ouptus
@@ -181,6 +181,7 @@ def analysis(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_file: st
 
     # Create DataFrame with the results
     new_row_df = pd.DataFrame([row])
+    
     if out_file == '':
         print(repo)
         print(transform_to_metric_table(new_row_df))
@@ -211,7 +212,7 @@ def analysis(before_ci: pd.DataFrame, after_ci: pd.DataFrame, repo, out_file: st
         # File doesn't exist → create new one
         new_row_df.to_csv(out_file, index=False)
 
-    # print(f"Results saved/updated in {out_file}")
+    print(f"Results saved/updated in {out_file}")
 
 
 # # Even though the record exits, the connection times out alot, So we added, the CI timestamps for mined repos as hardcoded
@@ -322,7 +323,7 @@ def dataSetup(repo_name, owner):
     data["t2"] = (data['publish_date'] - data['merged_at']).dt.total_seconds()
     data["lifetime"] = data['t1'] + data['t2']
 
-
+    
 
     # Create two DataFrames: before and after CI start date
     before_ci = data[data['creation_date'] < ci_start_date]

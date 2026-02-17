@@ -1,9 +1,11 @@
-source,project,cliff delta (estimate): pr lifetime,cliff delta (magnitude): delivery delay,cliff delta (estimate): delivery delay,mww test (p value): pr lifetime,cliff delta (estimate): merge time,mww test (p value): merge time,mww test (p value): delivery delay,cliff delta (magnitude): merge time,cliff delta (magnitude): pr lifetime
-your_file,jashkenas/backbone,0.2928252076,small,0.1733446881,0.0034695619,0.4374281456,1.26386e-05,0.0836274575,medium,small
-author_file,jashkenas/backbone,"0,037",negligible,"0,015",,"0,019","0,6767394319","0,74317863",negligible,negligible
-your_file,mizzy/serverspec,0.1401205516,negligible,-0.1327718603,0.1825377089,0.2771860292,0.0083476932,0.2065737623,small,negligible
-author_file,mizzy/serverspec,"0,385",negligible,"0,039",,"0,356","0,000000174","0,5623210455",medium,medium
-your_file,netflix/hystrix,-0.2398342541,small,-0.3039042357,0.0001366636,0.3683241252,4.7e-09,1.341e-06,medium,small
-author_file,netflix/hystrix,"0,189",small,"0,209",,"0,14","0,0113370419","0,00015035",negligible,small
-your_file,yiisoft/yii,-0.4492162082,medium,-0.470570837,0.0,0.5467908903,0.0,0.0,large,medium
-author_file,yiisoft/yii,"-0,028",negligible,"-0,023",,"0,039","0,4607482591","0,6679685232",negligible,negligible
+source,project,cliff delta (estimate): delivery delay,cliff delta (magnitude): pr lifetime,cliff delta (magnitude): delivery delay,cliff delta (magnitude): merge time,cliff delta (estimate): merge time,cliff delta (estimate): pr lifetime,mww test (p value): delivery delay,mww test (p value): pr lifetime,mww test (p value): merge time
+your_file,jashkenas/backbone,0.1822577423,small,small,medium,0.4373626374,0.2988611389,0.0684740217,0.002810721,1.22832e-05
+author_file,jashkenas/backbone,"0,015",negligible,negligible,negligible,"0,019","0,037","0,74317863",,"0,6767394319"
+your_file,mizzy/serverspec,-0.1327718603,negligible,negligible,small,0.2771860292,0.1401205516,0.2065737623,0.1825377089,0.0083476932
+author_file,mizzy/serverspec,"0,039",medium,negligible,medium,"0,356","0,385","0,5623210455",,"0,000000174"
+your_file,netflix/hystrix,-0.3039042357,small,small,medium,0.3683241252,-0.2398342541,1.341e-06,0.0001366636,4.7e-09
+author_file,netflix/hystrix,"0,209",small,small,negligible,"0,14","0,189","0,00015035",,"0,0113370419"
+your_file,pylons/pyramid,-0.1191574979,negligible,negligible,medium,0.4094525104,-0.114991869,2.72198e-05,5.1462e-05,0.0
+author_file,pylons/pyramid,"0,368",medium,medium,small,"-0,26","0,372","1,32E-012",,"0,000000359"
+your_file,yiisoft/yii,-0.470570837,medium,medium,large,0.5467908903,-0.4492162082,0.0,0.0,0.0
+author_file,yiisoft/yii,"-0,023",negligible,negligible,negligible,"0,039","-0,028","0,6679685232",,"0,4607482591"
