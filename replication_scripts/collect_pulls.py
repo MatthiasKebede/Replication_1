@@ -4,10 +4,10 @@ Data Collection Script (Step 1)
 Collect the initial PR information using the GitHub API.
 
 Usage:
-    python mine_repo.py <owner> <repo>
+    python collect_pulls.py <owner> <repo>
 
 Example:
-    python mine_repo.py Yelp mrjob
+    python collect_pulls.py Yelp mrjob
 """
 
 import sys
@@ -64,6 +64,7 @@ def collect_pull_requests(owner: str, repo_name: str) -> None:
         writer.writeheader()
         
         for pr in pull_requests:
+            # print(pr.number) # just for tracking progress
             # Get comment dates
             issue_comments = pr.get_issue_comments()
             review_comments = pr.get_review_comments()
@@ -106,8 +107,8 @@ def collect_pull_requests(owner: str, repo_name: str) -> None:
 def main():
     """Main entry point for the script"""
     if len(sys.argv) != 3:
-        print("Usage: python mine_repo.py <owner> <repo>")
-        print("Example: python mine_repo.py Yelp mrjob")
+        print("Usage: python collect_pulls.py <owner> <repo>")
+        print("Example: python collect_pulls.py Yelp mrjob")
         sys.exit(1)
 
     owner = sys.argv[1]
