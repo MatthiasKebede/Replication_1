@@ -12,10 +12,10 @@ import csv
 def consolidate_data(owner, repo_name):
     # File handling
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    output_dir = os.path.join(script_dir, '..', 'outputs')
-    pulls_file = os.path.join(output_dir, f'{owner}_{repo_name}_pulls_raw.csv')
-    linking_file = os.path.join(output_dir, f'{repo_name}_releases_linked.csv')
-    merged_file = os.path.join(output_dir, f'{repo_name}_data_merged.csv')
+    mined_output_dir = os.path.join(script_dir, '..', 'outputs', 'mined')
+    pulls_file = os.path.join(mined_output_dir, f'{repo_name}_pulls_raw.csv')
+    linking_file = os.path.join(mined_output_dir, f'{repo_name}_releases_linked.csv')
+    merged_file = os.path.join(mined_output_dir, f'{repo_name}_data_merged.csv')
 
     if not os.path.exists(pulls_file) or not os.path.exists(linking_file):
         print("Couldn't find CSV input files, check args or try running data collection scripts")
