@@ -12,8 +12,7 @@ from metrics import dataSetup, analysis
 script_dir = os.path.dirname(os.path.abspath(__file__))
 output_dir = os.path.join(script_dir, '..', 'outputs')
 
-
-def run_pipeline(owner: str, repo: str):
+def run_pipeline_with_new_data_set(owner: str, repo: str):
     """
     Runs the full replication pipeline for a single repository.
     """
@@ -31,7 +30,35 @@ def run_pipeline(owner: str, repo: str):
 
         print("Step 4: Computing metrics...")
         before_ci, after_ci =  dataSetup(repo, owner)
-        analysis(before_ci, after_ci, repo,os.path.join(output_dir, "results_from_minned_data.csv"))
+
+        analysis(before_ci, after_ci, repo,"../outputs/results_from_minned_data.csv",owner)
+
+
+        print(f"===== Completed {owner}/{repo} =====\n")
+
+    except Exception as e:
+        print(f"Error while processing {owner}/{repo}: {e}")
+        sys.exit(1)
+
+def run_pipeline(owner: str, repo: str):
+    """
+    Runs the full replication pipeline for a single repository.
+    """
+    print(f"\n===== Running pipeline for {owner}/{repo} =====")
+
+    try:
+        print("Step 1: Assumed Completed")
+
+        print("Step 2: Assumed Completed.")
+
+        print("Step 3: Merging data...")
+        consolidate_data(owner, repo)
+
+        print("Step 4: Computing metrics...")
+        before_ci, after_ci =  dataSetup(repo, owner)
+
+        analysis(before_ci, after_ci, repo,"../outputs/results_from_minned_data.csv",owner)
+
 
         print(f"===== Completed {owner}/{repo} =====\n")
 
